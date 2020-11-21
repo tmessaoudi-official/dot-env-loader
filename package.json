@@ -1,0 +1,35 @@
+{
+  "name": "@tmessaoudi-official/dot-env-loader",
+  "version": "0.0.5",
+  "description": "CLI tool to load/parse/format .env files in a smart way",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tmessaoudi-official/dot-env-loader"
+  },
+  "author": "Takieddine Messaoudi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tmessaoudi-official/dot-env-loader/issues"
+  },
+  "homepage": "https://github.com/tmessaoudi-official/dot-env-loader",
+  "keywords": [
+    "javascript",
+    "dot-env",
+    "parser",
+    "processor"
+  ],
+  "private": false,
+  "engines": {
+    "node": ">=15.2",
+    "npm": ">=7.0"
+  },
+  "engineStrict": true,
+  "scripts": {
+    "ng": "ng",
+    "load-env-js": "APP_ENV_RUN=true ts-node ./src/dot-env/dot-env-loader-run.dot-env.run.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "ts-node": "*"
+  }
+}
