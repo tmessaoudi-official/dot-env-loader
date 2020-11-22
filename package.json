@@ -1,6 +1,6 @@
 {
   "name": "@tmessaoudi-official/dot-env-loader",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "CLI tool to load/parse/format .env files in a smart way",
   "repository": {
     "type": "git",
@@ -25,7 +25,6 @@
   },
   "engineStrict": true,
   "scripts": {
-    "ng": "ng",
     "load-env-js": "APP_ENV_RUN=true ts-node ./src/dot-env/dot-env-loader-run.dot-env.run.js"
   },
   "dependencies": {},
