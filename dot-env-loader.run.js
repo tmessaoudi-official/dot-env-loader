@@ -102,8 +102,9 @@ const dotEnvLoaderRun = function (source = null) {
 					this.fs.unlinkSync(envBuildPath);
 				} catch (err) {}
 				let data = ``;
-				Object.keys(this.tmp).forEach(function (item) {
-					data += item + `=${this.tmp[item]}\n`;
+				let stringifiedData = this.webpackify(this.tmp, false);
+				Object.keys(stringifiedData).forEach(function (item) {
+					data += item + `=${stringifiedData[item]}\n`;
 				}, this);
 				Object.keys(this.config).forEach(function (item) {
 					if (item === `files`) {
@@ -742,17 +743,13 @@ const dotEnvLoaderRun = function (source = null) {
 
 			return value;
 		},
-		webpackify: function (data) {
+		webpackify: function (data, quote = true) {
 			const APP_ENV = {};
 			Object.keys(data).forEach(function (item) {
-				if (typeof data[item] === `boolean`) {
+				if (typeof data[item] === `boolean` || typeof data[item] === `undefined` || data[item] === null) {
 					APP_ENV[item] = data[item];
 				} else if (typeof data[item] === `string`) {
-					APP_ENV[item] = `\`` + data[item] + `\``;
-				} else if (typeof data[item] === `undefined`) {
-					APP_ENV[item] = data[item];
-				} else if (data[item] === null) {
-					APP_ENV[item] = data[item];
+					APP_ENV[item] = (quote ? `\`` : ``) + data[item] + (quote ? `\`` : ``);
 				} else {
 					APP_ENV[item] = JSON.stringify(data[item]);
 				}
