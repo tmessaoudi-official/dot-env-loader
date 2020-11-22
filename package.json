@@ -1,6 +1,6 @@
 {
   "name": "@tmessaoudi-official/dot-env-loader",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "CLI tool to load/parse/format .env files in a smart way",
   "repository": {
     "type": "git",
