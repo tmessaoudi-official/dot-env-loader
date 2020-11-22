@@ -46,6 +46,16 @@ const dotEnvLoaderRun = function (source = null) {
 
 			this.load({ current: envConfigPath }, encoding, true);
 
+			this.config.APP_ENV_CONFIG_HANDLERS_OVERRIDE.split(this.config.APP_ENV_CONFIG_HANDLERS_OVERRIDE_SEPARATOR).map(
+				function (item) {
+					return item.split(this.config.APP_ENV_CONFIG_HANDLERS_OVERRIDE_PREFIX_SEPARATOR);
+				}, this).forEach(function (item) {
+				if (typeof this.environment[item.handler] === `undefined`) {
+					this.environment[item.handler] = {};
+				}
+				this.environment[item[0]][item[1]] = require(`${process.cwd()}/${item[2]}`).default;
+			}, this);
+
 			delete this.config.garbage;
 			this.load(
 				{
@@ -98,18 +108,6 @@ const dotEnvLoaderRun = function (source = null) {
 					);
 				}
 			}
-
-			/*console.log(this.config);
-			const handlers = this.config.APP_ENV_CONFIG_HANDLERS.split(`,`).map(
-				function (item) {
-					return item.split(`:`);
-				}
-			);
-			console.log(handlers);
-			console.log(handlers[0][1]);
-			console.log(process.cwd());
-			let handler = require(`${process.cwd()}/${handlers[0][1]}`).default;
-			console.log(handler.test(`takieddine`));*/
 
 			return this.tmp;
 		},
@@ -229,14 +227,14 @@ const dotEnvLoaderRun = function (source = null) {
 											process.env[
 												this.config
 													.APP_ENV_CONFIG_NODE_ENV_INCLUDE
-											]
+												]
 										)
 										.replace(
 											`\${process.env::${this.config.APP_ENV_CONFIG_PROCESS_FILE_INCLUDES_KEY}}`,
 											process.env[
 												this.config
 													.APP_ENV_CONFIG_PROCESS_FILE_INCLUDES_KEY
-											]
+												]
 										);
 									if (
 										item.includes(
@@ -309,14 +307,14 @@ const dotEnvLoaderRun = function (source = null) {
 		},
 		doDebug: function (isConfig = false) {
 			return typeof process.env.NODE_DEBUG_FORCE === `string` &&
-				process.env.NODE_DEBUG_FORCE !== ``
+			process.env.NODE_DEBUG_FORCE !== ``
 				? process.env.NODE_DEBUG_FORCE === `true`
 				: this.config && typeof this.config.NODE_DEBUG !== `undefined`
-				? this.config.NODE_DEBUG === `true` ||
-				  this.config.NODE_DEBUG === true
-				: this.tmp && typeof this.tmp.NODE_DEBUG !== `undefined`
-				? this.tmp.NODE_DEBUG === `true` || this.tmp.NODE_DEBUG === true
-				: isConfig;
+					? this.config.NODE_DEBUG === `true` ||
+					this.config.NODE_DEBUG === true
+					: this.tmp && typeof this.tmp.NODE_DEBUG !== `undefined`
+						? this.tmp.NODE_DEBUG === `true` || this.tmp.NODE_DEBUG === true
+						: isConfig;
 		},
 		evalProcessItems: function () {
 			Object.keys(this.tmp).forEach(function (item) {
