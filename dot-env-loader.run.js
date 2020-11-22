@@ -46,15 +46,26 @@ const dotEnvLoaderRun = function (source = null) {
 
 			this.load({ current: envConfigPath }, encoding, true);
 
-			this.config.APP_ENV_CONFIG_HANDLERS_OVERRIDE.split(this.config.APP_ENV_CONFIG_HANDLERS_OVERRIDE_SEPARATOR).map(
-				function (item) {
-					return item.split(this.config.APP_ENV_CONFIG_HANDLERS_OVERRIDE_PREFIX_SEPARATOR);
-				}, this).forEach(function (item) {
-				if (typeof this.environment[item.handler] === `undefined`) {
-					this.environment[item.handler] = {};
-				}
-				this.environment[item[0]][item[1]] = require(`${process.cwd()}/${item[2]}`).default;
-			}, this);
+			this.config.APP_ENV_CONFIG_HANDLERS_OVERRIDE.split(
+				this.config.APP_ENV_CONFIG_HANDLERS_OVERRIDE_SEPARATOR
+			)
+				.map(function (item) {
+					return item.split(
+						this.config
+							.APP_ENV_CONFIG_HANDLERS_OVERRIDE_PREFIX_SEPARATOR
+					);
+				}, this)
+				.forEach(function (item) {
+					if (!item[0] || !item[1] || !item[2]) {
+						return;
+					}
+					if (typeof this.environment[item[0]] === `undefined`) {
+						this.environment[item[0]] = {};
+					}
+					this.environment[item[0]][
+						item[1]
+						] = require(`${process.cwd()}/${item[2]}`).default;
+				}, this);
 
 			delete this.config.garbage;
 			this.load(
