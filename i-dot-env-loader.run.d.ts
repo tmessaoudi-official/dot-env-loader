@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 declare interface IDotEnvLoaderRun {
 	source: EDotEnvLoaderSource;
+	silent: boolean;
 	fs: never | null;
 	config: Array<string | Array<Array<string>>> | null;
 	tmp: Array<

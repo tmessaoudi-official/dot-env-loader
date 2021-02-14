@@ -1,5 +1,5 @@
-const dotEnvLoaderRun = function (source = null) {
-	const init = function (source = null) {
+const dotEnvLoaderRun = function (source = null, silent = false) {
+	const initSource = function (source = null) {
 		if (typeof source !== `string` || source === ``) {
 			source = `process`;
 		}
@@ -10,9 +10,16 @@ const dotEnvLoaderRun = function (source = null) {
 		}
 		return source;
 	};
+	const initSilent = function (silent = false) {
+		if (typeof silent !== `boolean`) {
+			silent = false;
+		}
+		return silent;
+	};
 
 	return {
-		source: init(source),
+		source: initSource(source),
+		silent: initSilent(silent),
 		fs: require(`fs`),
 		config: { garbage: [], files: [] },
 		tmp: { garbage: [] },
@@ -88,7 +95,7 @@ const dotEnvLoaderRun = function (source = null) {
 			this.evalAppItems();
 			this.handleValues();
 
-			if (this.tmp.APP_DEBUG) {
+			if (!this.silent && this.tmp.APP_DEBUG) {
 				console.log(this.tmp);
 				console.log(this.config.files);
 			}
@@ -318,7 +325,7 @@ const dotEnvLoaderRun = function (source = null) {
 			}
 		},
 		doDebug: function (isConfig = false) {
-			return typeof process.env.NODE_DEBUG_FORCE === `string` &&
+			return !this.silent && (typeof process.env.NODE_DEBUG_FORCE === `string` &&
 			process.env.NODE_DEBUG_FORCE !== ``
 				? process.env.NODE_DEBUG_FORCE === `true`
 				: this.config && typeof this.config.NODE_DEBUG !== `undefined`
@@ -326,7 +333,7 @@ const dotEnvLoaderRun = function (source = null) {
 					this.config.NODE_DEBUG === true
 					: this.tmp && typeof this.tmp.NODE_DEBUG !== `undefined`
 						? this.tmp.NODE_DEBUG === `true` || this.tmp.NODE_DEBUG === true
-						: isConfig;
+						: isConfig);
 		},
 		evalProcessItems: function () {
 			Object.keys(this.tmp).forEach(function (item) {
